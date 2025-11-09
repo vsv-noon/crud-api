@@ -14,3 +14,13 @@ This project implements a minimal CRUD API for `/api/users` using Node.js (nativ
 - GET `/api/users/:id` — get user by id (200). Returns 400 if id is not UUID, 404 if not found.
 - PUT `/api/users/:id` — update user (200). Validates id and body.
 - DELETE `/api/users/:id` — delete user (204).
+
+
+Users are stored as objects that have following properties:
+```JSON
+{
+  "username": "Alice",
+  "age": 25,
+  "hobbies": ["reading", "music"]
+}
+```

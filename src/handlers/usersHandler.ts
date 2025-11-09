@@ -1,7 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { parseJsonBody, sendJSON } from '../utils';
 import { db } from '../db';
-import { validateUserId, validateUserPayload } from '../validators';
+import { sendJSON, parseJsonBody } from '../utils';
+import { v4 as uuidv4 } from 'uuid';
+import { validateUserPayload, validateUserId } from '../validators';
 
 const pathIdRegex = /^\/api\/users\/([^\/]+)\/?$/;
 
@@ -24,6 +25,7 @@ export const usersHandler = async (
     }
 
     const userId = match[1];
+
     const idValidation = validateUserId(userId);
     if (!idValidation.valid)
       return sendJSON(res, 400, { message: idValidation.message });
@@ -35,6 +37,17 @@ export const usersHandler = async (
           message: `User with id ${userId} not found`,
         });
       return sendJSON(res, 200, user);
+    }
+
+    if (method === 'DELETE') {
+      const existed = await db.delete(userId);
+      if (!existed)
+        return sendJSON(res, 404, {
+          message: `User with id ${userId} not found`,
+        });
+
+      res.writeHead(204);
+      return res.end();
     }
 
     if (method === 'POST') {
@@ -66,7 +79,10 @@ export const usersHandler = async (
     }
 
     return sendJSON(res, 404, { message: 'Not Found' });
-  } catch (err) {
+  } catch (err: any) {
+    if (err && typeof err === 'object' && 'status' in err && 'message' in err) {
+      return sendJSON(res, err.status, { message: err.message });
+    }
     console.error('Unhandled usersHandler error', err);
     return sendJSON(res, 500, { message: 'Internal Server Error' });
   }

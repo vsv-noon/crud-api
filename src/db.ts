@@ -19,4 +19,5 @@ export const db = {
     users.set(id, updated);
     return updated;
   },
+  delete: async (id: string): Promise<boolean> => users.delete(id),
 };

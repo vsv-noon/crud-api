@@ -5,10 +5,7 @@ import { usersHandler } from './handlers/usersHandler';
 export const router = async (req: IncomingMessage, res: ServerResponse) => {
   try {
     const url = req.url || '';
-    if (
-      // (req.method === 'GET' && url === '/api/users') ||
-      (req.method === 'POST' && url === '/api/users')
-    ) {
+    if (req.method === 'POST' && url === '/api/users') {
       return rootHandler(req, res);
     }
 
