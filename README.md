@@ -17,6 +17,10 @@ This project implements a minimal CRUD API for `/api/users` using Node.js (nativ
 - DELETE `/api/users/:id` — delete user (204).
 
 
+Sample endpoint with userId:
+`http://localhost:4000/api/users/5fcd3f27-8a72-4361-b2bb-2b68b0898cf2`
+
+
 Users are stored as objects that have following properties:
 ```JSON
 {
