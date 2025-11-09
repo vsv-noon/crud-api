@@ -61,10 +61,28 @@ describe('API CRUD tests', () => {
     expect(res.body.username).toBe('John');
   });
 
+  it('PUT /api/users/{id} should update user', async () => {
+    const res = await fetchJSON(`${baseUrl}/api/users/${createdId}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        username: 'Johnny',
+        age: 31,
+        hobbies: ['coding'],
+      }),
+    });
+    expect(res.status).toBe(200);
+    expect(res.body.username).toBe('Johnny');
+  });
+
   it('DELETE /api/users/{id} should delete user', async () => {
     const res = await fetchJSON(`${baseUrl}/api/users/${createdId}`, {
       method: 'DELETE',
     });
     expect(res.status).toBe(204);
+  });
+
+  it('GET deleted user should return 404', async () => {
+    const res = await fetchJSON(`${baseUrl}/api/users/${createdId}`);
+    expect(res.status).toBe(404);
   });
 });

@@ -7,6 +7,7 @@ This project implements a minimal CRUD API for `/api/users` using Node.js (nativ
 2. Install deps: `npm install`
 3. Dev: `npm run start:dev` (uses ts-node-dev)
 4. Prod: `npm run start:prod`
+5. Test: `npm run test`
 
 ## Features
 - GET `/api/users` — returns all users (200)
