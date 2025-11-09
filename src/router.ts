@@ -6,7 +6,7 @@ export const router = async (req: IncomingMessage, res: ServerResponse) => {
   try {
     const url = req.url || '';
     if (
-      (req.method === 'GET' && url === '/api/users') ||
+      // (req.method === 'GET' && url === '/api/users') ||
       (req.method === 'POST' && url === '/api/users')
     ) {
       return rootHandler(req, res);

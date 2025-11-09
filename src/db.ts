@@ -9,4 +9,14 @@ export const db = {
     users.set(user.id, user);
     return user;
   },
+  update: async (
+    id: string,
+    partial: Partial<User>
+  ): Promise<User | undefined> => {
+    const existing = users.get(id);
+    if (!existing) return undefined;
+    const updated: User = { ...existing, ...partial, id };
+    users.set(id, updated);
+    return updated;
+  },
 };

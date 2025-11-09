@@ -1,7 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { sendJSON } from '../utils';
+import { parseJsonBody, sendJSON } from '../utils';
 import { db } from '../db';
-import { validateUserId } from '../validators';
+import { validateUserId, validateUserPayload } from '../validators';
 
 const pathIdRegex = /^\/api\/users\/([^\/]+)\/?$/;
 
@@ -37,10 +37,32 @@ export const usersHandler = async (
       return sendJSON(res, 200, user);
     }
 
-    
-
     if (method === 'POST') {
       return sendJSON(res, 404, { message: 'Not Found' });
+    }
+
+    if (method === 'PUT') {
+      const body = await parseJsonBody(req).catch((err) => {
+        throw { status: 400, message: 'Invalid JSON body' };
+      });
+
+      const validation = validateUserPayload(body);
+      if (!validation.valid)
+        return sendJSON(res, 400, { message: validation.message });
+
+      const existing = await db.getById(userId);
+      if (!existing)
+        return sendJSON(res, 404, {
+          message: `User with id ${userId} not found`,
+        });
+
+      const updated = await db.update(userId, {
+        username: body.username,
+        age: body.age,
+        hobbies: body.hobbies,
+      });
+
+      return sendJSON(res, 200, updated);
     }
 
     return sendJSON(res, 404, { message: 'Not Found' });
